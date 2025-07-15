@@ -46,11 +46,21 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5EFE6), // Library beige
       appBar: AppBar(
-        title: const Text('Book Shelf'),
+        backgroundColor: const Color(0xFF8B6A4F), // Wood/brown tone
+        title: const Text('📚 Book Shelf Library'),
+        titleTextStyle: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
         actions: [
           IconButton(
-            icon: Icon(widget.isDark ? Icons.light_mode : Icons.dark_mode),
+            icon: Icon(
+              widget.isDark ? Icons.light_mode : Icons.dark_mode,
+              color: Colors.white,
+            ),
             onPressed: widget.toggleTheme,
           ),
         ],
@@ -63,6 +73,8 @@ class _HomePageState extends State<HomePage> {
               controller: searchCtrl,
               onChanged: _search,
               decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
                 hintText: 'Search books...',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
@@ -94,17 +106,19 @@ class _HomePageState extends State<HomePage> {
                     loadBooks();
                   },
                   child: Card(
+                    color: const Color(0xFFEEE3D0), // Light parchment color
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(14),
                     ),
-                    elevation: 5,
+                    elevation: 6,
+                    shadowColor: Colors.brown.withOpacity(0.3),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         if (book.coverImage != null)
                           ClipRRect(
                             borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(10),
+                              top: Radius.circular(14),
                             ),
                             child: Image.network(
                               book.coverImage!,
@@ -113,20 +127,29 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 book.title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                  color: Color(0xFF3E2C1C), // dark wood tone
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 book.author,
-                                style: const TextStyle(color: Colors.grey),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.brown,
+                                  fontSize: 13,
+                                ),
                               ),
                             ],
                           ),
@@ -141,6 +164,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xFF8B6A4F),
         onPressed: () async {
           await Navigator.push(
             context,
@@ -148,7 +172,7 @@ class _HomePageState extends State<HomePage> {
           );
           loadBooks();
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
