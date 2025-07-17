@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   List<Book> books = [];
   List<Book> filtered = [];
   final TextEditingController searchCtrl = TextEditingController();
+  String? selectedGenre;
 
   @override
   void initState() {
@@ -33,54 +34,107 @@ class _HomePageState extends State<HomePage> {
 
   void _search(String query) {
     setState(() {
-      filtered = books
-          .where(
-            (b) =>
-                b.title.toLowerCase().contains(query.toLowerCase()) ||
-                b.author.toLowerCase().contains(query.toLowerCase()),
-          )
-          .toList();
+      filtered = books.where((b) {
+        final matchQuery = b.title.toLowerCase().contains(query.toLowerCase()) ||
+            b.author.toLowerCase().contains(query.toLowerCase());
+        final matchGenre = selectedGenre == null || selectedGenre == 'All'
+            ? true
+            : b.genre.toLowerCase() == selectedGenre!.toLowerCase();
+        return matchQuery && matchGenre;
+      }).toList();
     });
+  }
+
+  List<String> getGenres() {
+    return [
+      'All',
+      'Fiction',
+      'Non-fiction',
+      'Mystery',
+      'Fantasy',
+      'Science Fiction',
+      'Romance',
+      'Horror',
+      'Biography',
+      'Historical',
+      'Adventure',
+      'Thriller',
+      'Self-Help',
+      'Poetry',
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5EFE6), // Library beige
+      backgroundColor: const Color(0xFFF5EFE6),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF8B6A4F), // Wood/brown tone
+        backgroundColor: const Color(0xFF8B6A4F),
         title: const Text('📚 Book Shelf Library'),
         titleTextStyle: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              widget.isDark ? Icons.light_mode : Icons.dark_mode,
-              color: Colors.white,
-            ),
-            onPressed: widget.toggleTheme,
-          ),
-        ],
       ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(12),
-            child: TextField(
-              controller: searchCtrl,
-              onChanged: _search,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: 'Search books...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: TextField(
+                    controller: searchCtrl,
+                    onChanged: _search,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: 'Search books...',
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: DropdownButtonFormField<String>(
+                    isExpanded: true,
+                    value: selectedGenre ?? 'All',
+                    items: getGenres()
+                        .map((genre) => DropdownMenuItem(
+                              value: genre,
+                              child: Text(
+                                genre,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedGenre = value;
+                        _search(searchCtrl.text);
+                      });
+                    },
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -106,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                     loadBooks();
                   },
                   child: Card(
-                    color: const Color(0xFFEEE3D0), // Light parchment color
+                    color: const Color(0xFFEEE3D0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -138,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 15,
-                                  color: Color(0xFF3E2C1C), // dark wood tone
+                                  color: Color(0xFF3E2C1C),
                                 ),
                               ),
                               const SizedBox(height: 4),

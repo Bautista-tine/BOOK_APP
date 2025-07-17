@@ -70,14 +70,22 @@ class _EditBookPageState extends State<EditBookPage> {
     if (success && context.mounted) Navigator.pop(context);
   }
 
-  Widget _field(TextEditingController c, String label) {
+  Widget _field(TextEditingController c, String label, IconData icon, {int maxLines = 1}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: TextFormField(
         controller: c,
+        maxLines: maxLines,
+        style: const TextStyle(color: Colors.black),
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(),
+          filled: true,
+          fillColor: Colors.white,
+          labelStyle: const TextStyle(color: Colors.brown),
+          prefixIcon: Icon(icon, color: Colors.brown),  // Add icon inside the field
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),  // Rounded corners
+          ),
         ),
         validator: (v) => v == null || v.isEmpty ? 'Required' : null,
       ),
@@ -87,34 +95,65 @@ class _EditBookPageState extends State<EditBookPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Book')),
+      backgroundColor: const Color(0xFFF5EFE6), // Library beige
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF8B6A4F), // Wood tone
+        title: const Text('Edit Book'),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8B6A4F),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
                 onPressed: _pickImage,
                 icon: const Icon(Icons.image),
                 label: const Text('Change Cover Image'),
               ),
               const SizedBox(height: 10),
               if (bytes != null)
-                Image.memory(bytes!, height: 150)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.memory(bytes!, height: 150, fit: BoxFit.cover),
+                )
               else if (file != null)
-                Image.file(file!, height: 150)
-              else if (widget.book.coverImage != null)
-                Image.network(widget.book.coverImage!, height: 150),
-              _field(title, 'Title'),
-              _field(author, 'Author'),
-              _field(genre, 'Genre'),
-              _field(description, 'Description'),
-              _field(publishedDate, 'Published Date (YYYY-MM-DD)'),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.file(file!, height: 150, fit: BoxFit.cover),
+                ),
+              const SizedBox(height: 10),
+              _field(title, 'Title', Icons.title),
+              _field(author, 'Author', Icons.person),
+              _field(genre, 'Genre', Icons.category),
+              _field(description, 'Description', Icons.description, maxLines: 3),
+              _field(publishedDate, 'Published Date (YYYY-MM-DD)', Icons.date_range),
               const SizedBox(height: 16),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8B6A4F),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
                 onPressed: _submit,
-                child: const Text('Update Book'),
+                child: const Text('Update Book', style: TextStyle(fontSize: 16)),
               ),
             ],
           ),

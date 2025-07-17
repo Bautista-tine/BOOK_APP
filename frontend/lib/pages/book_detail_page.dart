@@ -43,15 +43,22 @@ class BookDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5EFE6), // Same beige background as HomePage
       appBar: AppBar(
+        backgroundColor: const Color(0xFF8B6A4F), // Same wood/brown tone as HomePage AppBar
         title: Text(book.title),
+        titleTextStyle: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit),
+            icon: const Icon(Icons.edit, color: Colors.white),
             onPressed: () => _edit(context),
           ),
           IconButton(
-            icon: const Icon(Icons.delete),
+            icon: const Icon(Icons.delete, color: Colors.white),
             onPressed: () => _delete(context),
           ),
         ],
@@ -61,23 +68,40 @@ class BookDetailPage extends StatelessWidget {
         child: ListView(
           children: [
             if (book.coverImage != null)
-              Image.network(book.coverImage!, height: 200),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(book.coverImage!, height: 200, fit: BoxFit.cover),
+              ),
             const SizedBox(height: 12),
             Text(
               book.title,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF3E2C1C), // dark wood tone like HomePage text
+              ),
             ),
             const SizedBox(height: 4),
-            Text('Author: ${book.author}'),
+            Text(
+              'Author: ${book.author}',
+              style: const TextStyle(color: Colors.brown),
+            ),
             const SizedBox(height: 4),
-            Text('Genre: ${book.genre}'),
+            Text(
+              'Genre: ${book.genre}',
+              style: const TextStyle(color: Colors.brown),
+            ),
             const SizedBox(height: 4),
             if (book.publishedDate != null)
               Text(
                 'Published: ${book.publishedDate!.toIso8601String().split('T').first}',
+                style: const TextStyle(color: Colors.brown),
               ),
-            const SizedBox(height: 8),
-            Text(book.description),
+            const SizedBox(height: 12),
+            Text(
+              book.description,
+              style: const TextStyle(color: Color(0xFF3E2C1C)),
+            ),
           ],
         ),
       ),

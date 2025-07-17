@@ -53,17 +53,19 @@ class _AddBookPageState extends State<AddBookPage> {
     if (success && context.mounted) Navigator.pop(context);
   }
 
-  Widget _field(TextEditingController c, String label, {int maxLines = 1}) {
+  Widget _field(TextEditingController c, String label, IconData icon, {int maxLines = 1}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: TextFormField(
         controller: c,
         maxLines: maxLines,
+        style: const TextStyle(color: Colors.black),
         decoration: InputDecoration(
           labelText: label,
           filled: true,
           fillColor: Colors.white,
           labelStyle: const TextStyle(color: Colors.brown),
+          prefixIcon: Icon(icon, color: Colors.brown),  // Add icon inside TextFormField
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -118,11 +120,11 @@ class _AddBookPageState extends State<AddBookPage> {
                   child: Image.file(file!, height: 150, fit: BoxFit.cover),
                 ),
               const SizedBox(height: 10),
-              _field(title, 'Title'),
-              _field(author, 'Author'),
-              _field(genre, 'Genre'),
-              _field(description, 'Description', maxLines: 3),
-              _field(publishedDate, 'Published Date (YYYY-MM-DD)'),
+              _field(title, 'Title', Icons.title),
+              _field(author, 'Author', Icons.person),
+              _field(genre, 'Genre', Icons.category),
+              _field(description, 'Description', Icons.description, maxLines: 3),
+              _field(publishedDate, 'Published Date (YYYY-MM-DD)', Icons.date_range),
               const SizedBox(height: 16),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
