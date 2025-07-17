@@ -43,10 +43,18 @@ exports.getBookById = async (req, res) => {
 };
 
 exports.updateBook = async (req, res) => {
-  const book = await Book.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  res.json(book);
+  try {
+    const updateData = { ...req.body };
+    if (req.file) {
+      updateData.coverImage = `uploads/${req.file.filename}`;
+    }
+    const book = await Book.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+    });
+    res.json(book);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 exports.deleteBook = async (req, res) => {

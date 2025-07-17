@@ -6,7 +6,7 @@ const bookCtrl = require('../controllers/bookController');
 router.get('/', bookCtrl.getBooks);
 router.get('/:id', bookCtrl.getBookById);
 router.post('/', upload.single('coverImage'), bookCtrl.createBook);
-router.put('/:id', bookCtrl.updateBook);
+router.put('/:id', upload.single('coverImage'), bookCtrl.updateBook);
 router.delete('/:id', bookCtrl.deleteBook);
 
 module.exports = router;
